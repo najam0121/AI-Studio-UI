@@ -101,21 +101,21 @@ export function ModelSelector({ onModelChange }: ModelSelectorProps) {
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between h-auto p-3 hover:bg-muted/50 transition-colors"
+            className="w-full justify-between h-auto p-3 hover:bg-muted/90  hover:bg-gray-300 hover:border-purple-300 transition-colors group"
           >
             <div className="flex items-center gap-3">
-              <selectedModel.icon className="h-4 w-4 text-primary" />
+              <selectedModel.icon className="h-4 w-4 text-primary group-hover:text-white transition-colors" />
               <div className="text-left">
-                <div className="font-medium">{selectedModel.name}</div>
-                <div className="text-xs text-muted-foreground">
+                <div className="font-medium group-hover:text-white transition-colors">{selectedModel.name}</div>
+                <div className="text-xs text-muted-foreground group-hover:text-black/70 transition-colors">
                   {selectedModel.provider}
                 </div>
               </div>
             </div>
-            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50 group-hover:text-black/90 transition-colors" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[400px] p-0" align="start">
+        <PopoverContent className="w-[400px]  p-0" align="start">
           <Command>
             <CommandInput placeholder="Search models..." className="h-9" />
             <CommandList>
@@ -126,7 +126,7 @@ export function ModelSelector({ onModelChange }: ModelSelectorProps) {
                     key={model.id}
                     value={model.id}
                     onSelect={() => handleModelSelect(model)}
-                    className="flex items-start gap-3 p-3 cursor-pointer"
+                    className="flex items-start gap-3 p-3 cursor-pointer "
                   >
                     <model.icon className="h-4 w-4 text-primary mt-0.5" />
                     <div className="flex-1 space-y-1">
@@ -139,7 +139,7 @@ export function ModelSelector({ onModelChange }: ModelSelectorProps) {
                           {model.tier}
                         </Badge>
                       </div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-black/70">
                         {model.description}
                       </p>
                       <div className="flex flex-wrap gap-1">

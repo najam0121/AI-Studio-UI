@@ -50,7 +50,7 @@ export function ParametersPanel({ onParametersChange }: ParametersPanelProps) {
     <Card className="w-full">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <CardTitle className="text-base font-semibold flex items-center gap-2 pointer-events-none">
             <Thermometer className="h-4 w-4 text-primary" />
             Model Parameters
           </CardTitle>

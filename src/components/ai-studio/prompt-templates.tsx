@@ -1,18 +1,83 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  BookOpen, 
-  Code, 
-  PenTool, 
-  MessageSquare, 
-  Plus, 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  BookOpen,
+  Code,
+  PenTool,
+  MessageSquare,
+  Plus,
   Search,
   Star,
-  Trash2
+  Trash2,
+  Brain,
+  Lightbulb,
+  Target,
+  Zap,
+  FileText,
+  Mail,
+  Users,
+  TrendingUp,
+  Shield,
+  Database,
+  Globe,
+  Camera,
+  Music,
+  Palette,
+  Calculator,
+  Heart,
+  Rocket,
+  Coffee,
+  Book,
+  Briefcase,
+  Settings,
+  Award,
+  Clock,
+  Map,
+  Smartphone,
+  Headphones,
+  Video,
+  Image,
+  Mic,
+  Edit,
+  Layout,
+  Layers,
+  Grid,
+  Compass,
+  Flag,
+  Gift,
+  Home,
+  Key,
+  Lock,
+  Megaphone,
+  Monitor,
+  Package,
+  Phone,
+  Printer,
+  Radio,
+  Scissors,
+  Server,
+  Shuffle,
+  Sliders,
+  Tablet,
+  Tag,
+  Thermometer,
+  Truck,
+  Umbrella,
+  Watch,
+  Wifi,
+  Wind,
+  Wrench
 } from "lucide-react";
 import {
   Dialog,
@@ -86,6 +151,7 @@ export function PromptTemplates({ onTemplateSelect }: PromptTemplatesProps) {
     content: "",
     description: "",
   });
+  const [customCategoryInput, setCustomCategoryInput] = useState("");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   const filteredTemplates = templates.filter(
@@ -111,38 +177,159 @@ export function PromptTemplates({ onTemplateSelect }: PromptTemplatesProps) {
   const createTemplate = () => {
     if (!newTemplate.title || !newTemplate.content) return;
 
+    // Use custom category input if "custom" was selected, otherwise use selected category
+    const finalCategory = newTemplate.category === "custom" ? customCategoryInput.trim() : newTemplate.category;
+
+    if (!finalCategory) return; // Don't create template without category
+
     const template: PromptTemplate = {
       id: Date.now().toString(),
       ...newTemplate,
-      icon: MessageSquare,
+      category: finalCategory,
+      icon: generateIconForTitle(newTemplate.title),
       favorite: false,
     };
 
     setTemplates((prev) => [...prev, template]);
     setNewTemplate({ title: "", category: "", content: "", description: "" });
+    setCustomCategoryInput("");
     setIsCreateDialogOpen(false);
   };
 
+  const predefinedCategories = [
+    { name: "Development", color: "bg-primary text-primary-foreground" },
+    { name: "Writing", color: "bg-accent text-accent-foreground" },
+    { name: "Education", color: "bg-success text-success-foreground" },
+    { name: "Strategy", color: "bg-warning text-warning-foreground" },
+    { name: "Analysis", color: "bg-blue-500 text-white" },
+    { name: "Creative", color: "bg-purple-500 text-white" },
+    { name: "Business", color: "bg-green-500 text-white" },
+    { name: "Research", color: "bg-orange-500 text-white" },
+  ];
+
   const getCategoryColor = (category: string) => {
-    const colors: Record<string, string> = {
-      Development: "bg-primary text-primary-foreground",
-      Writing: "bg-accent text-accent-foreground",
-      Education: "bg-success text-success-foreground",
-      Strategy: "bg-warning text-warning-foreground",
+    const predefined = predefinedCategories.find(cat => cat.name === category);
+    if (predefined) return predefined.color;
+
+    // Generate color for custom categories based on hash
+    const hash = category.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+
+    const colors = [
+      "bg-red-500 text-white",
+      "bg-blue-500 text-white",
+      "bg-green-500 text-white",
+      "bg-yellow-500 text-black",
+      "bg-purple-500 text-white",
+      "bg-pink-500 text-white",
+      "bg-indigo-500 text-white",
+      "bg-teal-500 text-white"
+    ];
+
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  // Icon pool for template generation
+  const availableIcons = [
+    Brain, Lightbulb, Target, Zap, FileText, Mail, Users, TrendingUp,
+    Shield, Database, Globe, Camera, Music, Palette, Calculator, Heart,
+    Rocket, Coffee, Book, Briefcase, Settings, Award, Clock, Map,
+    Smartphone, Headphones, Video, Image, Mic, Edit, Layout, Layers,
+    Grid, Compass, Flag, Gift, Home, Key, Lock, Megaphone, Monitor,
+    Package, Phone, Printer, Radio, Scissors, Server, Shuffle, Sliders,
+    Tablet, Tag, Thermometer, Truck, Umbrella, Watch, Wifi, Wind, Wrench
+  ];
+
+  // Get used icons from existing templates
+  const getUsedIcons = () => {
+    return templates.map(template => template.icon);
+  };
+
+  // Generate icon based on title keywords
+  const generateIconForTitle = (title: string) => {
+    const usedIcons = getUsedIcons();
+    const availableUnusedIcons = availableIcons.filter(icon => !usedIcons.includes(icon));
+
+    // If all icons are used, use any icon
+    const iconPool = availableUnusedIcons.length > 0 ? availableUnusedIcons : availableIcons;
+
+    const titleLower = title.toLowerCase();
+
+    // Keyword-based icon mapping
+    const keywordIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+      // Development & Code
+      'code': Code, 'develop': Code, 'program': Code, 'script': Code, 'api': Code,
+      'debug': Code, 'function': Code, 'algorithm': Code, 'software': Code,
+
+      // Writing & Content
+      'write': PenTool, 'content': PenTool, 'blog': PenTool, 'article': PenTool,
+      'story': BookOpen, 'book': Book, 'documentation': FileText, 'manual': FileText,
+
+      // Business & Strategy
+      'business': Briefcase, 'strategy': Target, 'plan': Target, 'goal': Target,
+      'meeting': Users, 'team': Users, 'project': Briefcase, 'proposal': FileText,
+
+      // Communication
+      'email': Mail, 'message': MessageSquare, 'chat': MessageSquare, 'call': Phone,
+      'presentation': Monitor, 'announcement': Megaphone, 'marketing': TrendingUp,
+
+      // Creative & Design
+      'design': Palette, 'creative': Lightbulb, 'art': Palette, 'visual': Image,
+      'photo': Camera, 'video': Video, 'music': Music, 'audio': Headphones,
+
+      // Analysis & Research
+      'analysis': TrendingUp, 'research': Search, 'data': Database, 'report': FileText,
+      'study': BookOpen, 'review': Star, 'feedback': MessageSquare, 'survey': FileText,
+
+      // Technology & Tools
+      'app': Smartphone, 'mobile': Smartphone, 'web': Globe, 'website': Globe,
+      'server': Server, 'database': Database, 'security': Shield, 'backup': Package,
+
+      // Personal & Lifestyle
+      'health': Heart, 'fitness': TrendingUp, 'travel': Map, 'food': Coffee,
+      'home': Home, 'personal': Users, 'habit': Clock, 'routine': Clock,
+
+      // Education & Learning
+      'learn': BookOpen, 'teach': Users, 'course': Book, 'tutorial': Video,
+      'guide': Map, 'training': Award, 'skill': Target, 'knowledge': Brain,
+
+      // Innovation & Ideas
+      'idea': Lightbulb, 'innovation': Rocket, 'brainstorm': Brain, 'creativity': Palette,
+      'solution': Key, 'problem': Target, 'improvement': TrendingUp, 'optimize': Zap
     };
-    return colors[category] || "bg-muted text-muted-foreground";
+
+    // Find matching icon based on keywords
+    for (const [keyword, icon] of Object.entries(keywordIconMap)) {
+      if (titleLower.includes(keyword)) {
+        // Check if this icon is available in our pool by comparing function names
+        const matchingIcon = iconPool.find(poolIcon => poolIcon.name === icon.name);
+        if (matchingIcon) {
+          return matchingIcon;
+        }
+      }
+    }
+
+    // If no keyword match, generate based on title hash
+    const hash = title.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+
+    return iconPool[Math.abs(hash) % iconPool.length];
   };
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-3">
+    <Card className="h-full flex flex-col">
+      <CardHeader className="pb-3 flex-shrink-0">
         <div className="flex items-center justify-between mb-3">
-          <CardTitle className="text-base font-semibold">Prompt Templates</CardTitle>
+          <CardTitle className="text-sm sm:text-base font-semibold pointer-events-none">Prompt Templates</CardTitle>
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" variant="outline">
-                <Plus className="h-3 w-3 mr-1" />
-                New
+              <Button size="sm" variant="outline" className="h-8 px-2 sm:px-3">
+                <Plus className="h-3 w-3 sm:mr-1" />
+                <span className="hidden sm:inline">New</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[500px]">
@@ -155,23 +342,82 @@ export function PromptTemplates({ onTemplateSelect }: PromptTemplatesProps) {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Title</label>
-                  <Input
-                    value={newTemplate.title}
-                    onChange={(e) =>
-                      setNewTemplate((prev) => ({ ...prev, title: e.target.value }))
-                    }
-                    placeholder="Template title"
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      value={newTemplate.title}
+                      onChange={(e) =>
+                        setNewTemplate((prev) => ({ ...prev, title: e.target.value }))
+                      }
+                      placeholder="Template title"
+                      className="flex-1"
+                    />
+                    {newTemplate.title && (
+                      <div className="flex items-center gap-2 px-3 py-2 border rounded-md bg-muted/50">
+                        {React.createElement(generateIconForTitle(newTemplate.title), {
+                          className: "h-4 w-4 text-primary"
+                        })}
+                        <span className="text-xs text-muted-foreground">Auto-generated icon</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Category</label>
-                  <Input
+                  <Select
                     value={newTemplate.category}
-                    onChange={(e) =>
-                      setNewTemplate((prev) => ({ ...prev, category: e.target.value }))
+                    onValueChange={(value) =>
+                      setNewTemplate((prev) => ({ ...prev, category: value }))
                     }
-                    placeholder="e.g., Development, Writing"
-                  />
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category">
+                        {newTemplate.category && newTemplate.category !== "custom" && (
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary" className={`text-xs ${getCategoryColor(newTemplate.category)}`}>
+                              {newTemplate.category}
+                            </Badge>
+                          </div>
+                        )}
+                        {newTemplate.category === "custom" && (
+                          <span className="text-sm text-muted-foreground">Custom Category</span>
+                        )}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {predefinedCategories.map((category) => (
+                        <SelectItem key={category.name} value={category.name}>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary" className={`text-xs ${category.color}`}>
+                              {category.name}
+                            </Badge>
+                          </div>
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="custom">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-muted-foreground">+ Custom Category</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {newTemplate.category === "custom" && (
+                    <div className="mt-2 space-y-2">
+                      <Input
+                        value={customCategoryInput}
+                        placeholder="Enter custom category name (e.g., Marketing, Finance)"
+                        onChange={(e) => setCustomCategoryInput(e.target.value)}
+                        className="w-full"
+                      />
+                      {customCategoryInput.trim() && (
+                        <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-md">
+                          <Badge variant="secondary" className={`text-xs ${getCategoryColor(customCategoryInput.trim())}`}>
+                            {customCategoryInput.trim()}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">Preview with auto-generated color</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Description</label>
@@ -212,10 +458,10 @@ export function PromptTemplates({ onTemplateSelect }: PromptTemplatesProps) {
           />
         </div>
       </CardHeader>
-      <CardContent className="space-y-4 max-h-[500px] overflow-y-auto">
+      <CardContent className="flex-1 space-y-3 sm:space-y-4 overflow-y-auto min-h-0 ">
         {favoriteTemplates.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-1 pointer-events-none">
               <Star className="h-3 w-3" />
               Favorites
             </h4>
@@ -227,6 +473,7 @@ export function PromptTemplates({ onTemplateSelect }: PromptTemplatesProps) {
                 onToggleFavorite={toggleFavorite}
                 onDelete={deleteTemplate}
                 getCategoryColor={getCategoryColor}
+
               />
             ))}
           </div>
@@ -277,27 +524,28 @@ function TemplateCard({
   getCategoryColor,
 }: TemplateCardProps) {
   return (
-    <div className="border rounded-lg p-3 hover:bg-muted/50 transition-colors group">
-      <div className="flex items-start gap-3">
-        <template.icon className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+    <div className="border rounded-lg p-2 sm:p-3 hover:bg-muted/50 transition-colors group">
+      <div className="flex items-start gap-2 sm:gap-3">
+        <template.icon className="h-3 w-3 sm:h-4 sm:w-4 text-primary mt-0.5 flex-shrink-0" />
         <div className="flex-1 space-y-1">
-          <div className="flex items-center gap-2">
-            <h5 className="font-medium text-sm">{template.title}</h5>
-            <Badge variant="secondary" className={`text-xs ${getCategoryColor(template.category)}`}>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+            <h5 className="font-medium text-xs sm:text-sm">{template.title}</h5>
+            <Badge variant="secondary" className={`text-xs w-fit ${getCategoryColor(template.category)} pointer-events-none`}>
               {template.category}
             </Badge>
           </div>
           <p className="text-xs text-muted-foreground line-clamp-2">
             {template.description}
           </p>
-          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
             <Button
               size="sm"
               variant="ghost"
               onClick={() => onSelect(template)}
               className="h-6 px-2 text-xs"
             >
-              Use Template
+              <span className="hidden sm:inline">Use Template</span>
+              <span className="sm:hidden">Use</span>
             </Button>
             <Button
               size="sm"

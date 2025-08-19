@@ -145,51 +145,55 @@ export function ChatInterface({ selectedModel, parameters, onExport }: ChatInter
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b bg-gradient-surface">
-        <div className="flex items-center gap-2">
-          <h2 className="font-semibold">Chat Interface</h2>
+      <div className="flex items-center justify-between p-2 sm:p-4 border-b bg-gradient-surface">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <h2 className="text-sm sm:text-base font-semibold pointer-events-none">Chat Interface</h2>
           {selectedModel && (
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="outline" className="text-xs hidden sm:inline-flex">
               {selectedModel.name}
             </Badge>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-1 sm:gap-2">
           <Button
             variant="ghost"
             size="sm"
             onClick={exportChat}
             disabled={messages.length <= 1}
+            className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3"
           >
-            <Download className="h-4 w-4" />
+            <Download className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline ml-2">Export</span>
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={clearChat}
             disabled={messages.length <= 1}
+            className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3"
           >
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline ml-2">Clear</span>
           </Button>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-3 sm:space-y-4 min-h-[40vh] sm:min-h-0">
         {messages.map((message) => (
           <div key={message.id} className="group">
-            <Card className={`p-4 ${getRoleStyle(message.role)} transition-colors`}>
-              <div className="flex items-start justify-between gap-3">
+            <Card className={`p-2 sm:p-4 ${getRoleStyle(message.role)} transition-colors`}>
+              <div className="flex items-start justify-between gap-2 sm:gap-3">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge 
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <Badge
                       variant={message.role === 'user' ? 'default' : 'secondary'}
                       className="text-xs capitalize"
                     >
                       {message.role}
                     </Badge>
                     {message.model && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-xs hidden sm:inline-flex">
                         {message.model}
                       </Badge>
                     )}
@@ -237,7 +241,7 @@ export function ChatInterface({ selectedModel, parameters, onExport }: ChatInter
       </div>
 
       {/* Input Area */}
-      <div className="border-t p-4 bg-gradient-surface">
+      <div className="border-t p-2 sm:p-4 bg-gradient-surface">
         <div className="flex gap-2">
           <div className="flex-1 relative">
             <Textarea
@@ -245,35 +249,39 @@ export function ChatInterface({ selectedModel, parameters, onExport }: ChatInter
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder="Type your message... (Enter to send, Shift+Enter for new line)"
-              className="min-h-[80px] resize-none pr-12"
+              placeholder="Type your message..."
+              className="min-h-[60px] sm:min-h-[80px] resize-none pr-10 sm:pr-12 text-sm"
               disabled={isLoading}
             />
             <Button
               variant="ghost"
               size="sm"
-              className="absolute bottom-2 right-2 h-8 w-8 p-0"
+              className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 h-6 w-6 sm:h-8 sm:w-8 p-0"
               disabled
             >
-              <Paperclip className="h-4 w-4" />
+              <Paperclip className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </div>
           <Button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="self-end h-[80px] px-6"
+            className="self-end h-[60px] sm:h-[80px] px-3 sm:px-6"
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
         </div>
-        <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
-          <span>
-            {input.length} characters • Estimated tokens: ~{Math.ceil(input.length / 4)}
-          </span>
-          <span>
-            Max response: {parameters?.maxTokens || 2048} tokens
-          </span>
-        </div>
+        <div className="flex flex-row justify-between sm:flex-row sm:items-start mt-2 gap-1 sm:gap-0 text-xs text-muted-foreground">
+  <div className="flex gap-1">
+
+  <span>{input.length} chars</span>
+  <span>~{Math.ceil(input.length / 4)} tokens</span>
+  </div>
+  <div>
+
+  <span className="sm:mt-1">Max: {parameters?.maxTokens || 2048} tokens</span>
+  </div>
+</div>
+
       </div>
     </div>
   );

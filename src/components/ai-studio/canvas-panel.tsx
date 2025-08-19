@@ -107,6 +107,14 @@ export function CanvasPanel({ onContentChange }: CanvasPanelProps) {
   };
 
   const createNewDocument = (type: 'text' | 'code' | 'markdown') => {
+    const defaultTitle = `New ${type} document`;
+    const existing = canvasItems.find(item => item.title === defaultTitle && item.type === type);
+
+    if (existing) {
+      setActiveItemId(existing.id);
+      return;
+    }
+
     const templates = {
       text: 'New text document\n\nStart writing here...',
       code: '// New code document\nfunction example() {\n  console.log("Hello, World!");\n}\n\nexample();',
@@ -116,7 +124,7 @@ export function CanvasPanel({ onContentChange }: CanvasPanelProps) {
     const newItem: CanvasItem = {
       id: Date.now().toString(),
       type,
-      title: `New ${type} document`,
+      title: defaultTitle,
       content: templates[type],
       lastModified: new Date(),
     };
@@ -310,7 +318,7 @@ export function CanvasPanel({ onContentChange }: CanvasPanelProps) {
           </div>
 
           {/* Editor */}
-          <div className="flex-1 p-4">
+          <div className="flex-1 p-4 ">
             <Textarea
               ref={textareaRef}
               value={activeItem.content}
