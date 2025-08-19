@@ -1,11 +1,10 @@
 # AI Studio - Frontend & UI/UX Designer Assessment
 
-A sophisticated AI interface prototype that combines the best features from leading AI platforms into a cohesive, professional design system.
+A modern, responsive AI interface that brings together the best features from leading AI platforms into one cohesive experience. Built with React, TypeScript, and Tailwind CSS.
 
 ## 🚀 Live Demo
 
 **Live URL**: [Your deployment URL here]  
-**GitHub Repository**: [Your repository URL here]
 
 ---
 
@@ -61,7 +60,46 @@ A sophisticated AI interface prototype that combines the best features from lead
 
 ## 🎨 Design Phase
 
-### Design System Architecture
+### Interface Screenshots
+
+Instead of creating a separate Figma mockup, I developed the design directly in code, iterating on the interface through multiple versions. Here are screenshots of the final interface:
+
+#### Desktop Layout:
+
+The desktop layout utilizes a **three-panel architecture** optimized for productivity:
+
+- **Left sidebar** for model and template selection with clean navigation
+- **Center chat area** for conversation flow with clear message hierarchy  
+- **Right panel** for parameter controls with intuitive sliders
+  
+##### Light Mode-
+*-- Professional three-panel layout optimized for AI development workflows*
+
+<img width="1918" height="1034" alt="Screenshot 2025-08-19 122651" src="https://github.com/user-attachments/assets/ee743c70-9d3e-4a97-a74d-8937aa2b5bc1" />
+
+*-- Template creation modal showcasing the workflow management system*
+
+<img width="1103" height="925" alt="Screenshot 2025-08-19 122738" src="https://github.com/user-attachments/assets/9fbf944b-fb8e-49a3-8754-fe1acfc93e14" />
+
+##### Dark Mode-
+
+*-- Modern dark theme with reduced eye strain and enhanced focus*
+
+<img width="1919" height="1036" alt="Screenshot 2025-08-19 122848" src="https://github.com/user-attachments/assets/fe9e4085-29b4-4f2e-a30e-386e7f05a587" />
+
+#### Mobile Layout:
+
+The mobile layout transforms into a **single-column, touch-optimized interface**:
+
+- Responsive design that collapses panels into a mobile-friendly single-column layout
+- Touch-optimized controls and proper spacing for mobile interactions
+
+<img width="342" height="685" alt="Screenshot 2025-08-19 123551" src="https://github.com/user-attachments/assets/d590535d-528b-493a-9fb4-73ba0693129f" />
+
+<img width="349" height="689" alt="Screenshot 2025-08-19 123537" src="https://github.com/user-attachments/assets/d95f0d23-f69a-491c-9e42-6eecb7a1ff8e" />
+
+
+### Design System & Tailwind Mapping
 
 **Color Palette**: Professional AI-focused theme with semantic tokens
 - **Primary**: `hsl(217, 91%, 60%)` - Professional AI blue
@@ -262,7 +300,7 @@ npm run storybook-build  # Storybook static build
 ```
 ai-studio/
 ├── public/
-│   ├── robots.txt
+│   ├── placeholder.svg
 │   └── favicon.ico
 ├── src/
 │   ├── components/
@@ -382,9 +420,14 @@ npm run storybook
 
 ---
 
-**Total Implementation Time**: ~12 hours  
+**Total Implementation Time**: ~18 hours  
 **Final Bundle Size**: 487KB gzipped  
-**Lighthouse Score**: 97/100 average  
-**Accessibility Score**: WCAG 2.1 AA compliant  
+**Lighthouse Score**: 97/100 average
 
 This implementation demonstrates comprehensive understanding of modern React development, design systems, accessibility standards, and professional UI/UX practices suitable for production AI interfaces.
+
+---
+
+**Built with ❤️ by Najam** | Powered by coffee ☕ and late-night coding sessions
+
+📧 Questions? Issues? Let's connect: [mohammadnajam5459@gmail.com]
